@@ -1,16 +1,17 @@
 head' (x:_) = x
 
-tail' (_:xs) = [y | y<-xs]
+tail' (_:xs) = xs
 
-take' 0 (x:xs) = []
-take' 1 (x:xs) = x : []
-take' n (x:xs) = x : take' (n-1) xs
+take' 0 _          = []
+take' _ []         = []
+take' n (x:xs)     = x : take' (n-1) xs
 
-drop' n []     = []
-drop' 0 (x:xs) = x : [y | y<-xs]
-drop' n (x:xs) = drop' (n-1) xs
+drop' n []      = []
+drop' n (x:xs)
+    | n == 1    = xs
+    | otherwise = drop' (n-1) xs
 
-filter' f xs = [y | y<-xs, f y == True]
+filter' f xs = [y | y<-xs, f y]
 
 foldl' f z []     = z
 foldl' f z (x:xs) = foldl' f (f z x) xs
@@ -22,4 +23,4 @@ quicksort' []     = []
 quicksort' (x:xs) =  
     let smaller   = [a |a<-xs,a<=x]  
         larger    = [a |a<-xs,a>x]  
-    in  concat' (concat' (quicksort' smaller) [x])  (quicksort' larger)
+    in  concat' (quicksort' smaller)  (x : (quicksort' larger))
